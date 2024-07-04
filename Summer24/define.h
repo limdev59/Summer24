@@ -1,3 +1,5 @@
+#include "pch.h"
+
 #define SINGLE(type) public: \
 				static type* Instance() \
 				{\
