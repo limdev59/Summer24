@@ -4,18 +4,16 @@
 #include "pch.h"
 #include "framework.h"
 #include "Summer24.h"
+#include "CCore.h"
 
 #define MAX_LOADSTRING 100
 
 
 // 전역 변수:
 HINSTANCE hInst;                                // 현재 인스턴스입니다.
+HWND hWnd;
 WCHAR szTitle[MAX_LOADSTRING];                  // 제목 표시줄 텍스트입니다.
 WCHAR szWindowClass[MAX_LOADSTRING];            // 기본 창 클래스 이름입니다.
-
-static POINT sqa = { 100, 100 };
-static POINT m_start;
-static POINT m_end;
 
 // 이 코드 모듈에 포함된 함수의 선언을 전달합니다:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -45,6 +43,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     {
         return FALSE;
     }
+    if (FAILED(CCore::Instance()->Init(hWnd, Vec2{ 1200,768 }))) {
+        MessageBox(nullptr, L"CCore 객체 초기화 실패", L"err", MB_OK);
+        return false;
+    }
 
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_SUMMER24));
 
@@ -63,6 +65,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             }
         }
         else {
+            CCore::Instance()->Progress();
             
         }
     }
@@ -126,86 +129,10 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    return TRUE;
 }
 
-//
-//  함수: WndProc(HWND, UINT, WPARAM, LPARAM)
-//
-//  용도: 주 창의 메시지를 처리합니다.
-//
-//  WM_COMMAND  - 애플리케이션 메뉴를 처리합니다.
-//  WM_PAINT    - 주 창을 그립니다.
-//  WM_DESTROY  - 종료 메시지를 게시하고 반환합니다.
-//
-//
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
     {
-            static RECT rt;
-    case WM_COMMAND:
-        {
-            int wmId = LOWORD(wParam);
-            // 메뉴 선택을 구문 분석합니다:
-            switch (wmId)
-            {
-            case IDM_ABOUT:
-                DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
-                break;
-            case IDM_EXIT:
-                DestroyWindow(hWnd);
-                break;
-            default:
-                return DefWindowProc(hWnd, message, wParam, lParam);
-            }
-        }
-        break;
-    case WM_PAINT:
-        {
-            GetClientRect(hWnd, &rt);
-            PAINTSTRUCT ps;
-            HDC hdc = BeginPaint(hWnd, &ps);
-            SelectObject(hdc, (HBRUSH)GetStockObject(BLACK_BRUSH));
-            SelectObject(hdc, (HPEN)GetStockObject(LTGRAY_BRUSH));
-            
-            Rectangle(hdc, m_start.x, m_start.y, m_end.x, m_end.y);
-
-            EndPaint(hWnd, &ps);
-        }
-        break;
-
-    case WM_LBUTTONDOWN: {
-        m_start.y = HIWORD(lParam);
-        m_start.x = LOWORD(lParam);
-    }
-    break;
-    case WM_LBUTTONUP:{
-        m_end.y = HIWORD(lParam);
-        m_end.x = LOWORD(lParam);
-        InvalidateRect(hWnd, NULL, FALSE);
-
-    }
-    break;
-    case WM_KEYDOWN: {
-        switch (wParam)
-        {
-        case VK_UP:
-            sqa.y -= 10;
-            break;
-        case VK_LEFT:
-            sqa.x -= 10;
-            break;
-        case VK_DOWN:
-            sqa.y += 10;
-            break;
-        case VK_RIGHT:
-            sqa.x += 10;
-            break;
-        default:
-            break;
-        }
-        InvalidateRect(hWnd, NULL, FALSE);
-    }
-    break;
-
     case WM_DESTROY:
         PostQuitMessage(0);
         break;

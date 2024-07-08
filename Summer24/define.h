@@ -8,4 +8,4 @@
 				}\
 				private:\
 				type();\
-				~type();\
+				~type();
