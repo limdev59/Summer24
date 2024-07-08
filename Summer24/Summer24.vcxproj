@@ -131,17 +131,24 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="CCore.h" />
+    <ClInclude Include="CObject.h" />
     <ClInclude Include="define.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="KeyMgr.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="struct.h" />
     <ClInclude Include="Summer24.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="TimeMgr.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CCore.cpp" />
+    <ClCompile Include="CObject.cpp" />
+    <ClCompile Include="KeyMgr.cpp" />
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="Summer24.cpp" />
+    <ClCompile Include="TimeMgr.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Summer24.rc" />

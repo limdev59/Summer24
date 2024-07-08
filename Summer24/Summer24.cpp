@@ -1,35 +1,28 @@
-﻿// Summer24.cpp : 애플리케이션에 대한 진입점을 정의합니다.
-//
-
-#include "pch.h"
+﻿#include "pch.h"
 #include "framework.h"
 #include "Summer24.h"
 
+#include "CCore.h"
+
 #define MAX_LOADSTRING 100
 
+HINSTANCE hInst;
+HWND hWnd;
+WCHAR szTitle[MAX_LOADSTRING];
+WCHAR szWindowClass[MAX_LOADSTRING];
 
-// 전역 변수:
-HINSTANCE hInst;                                // 현재 인스턴스입니다.
-WCHAR szTitle[MAX_LOADSTRING];                  // 제목 표시줄 텍스트입니다.
-WCHAR szWindowClass[MAX_LOADSTRING];            // 기본 창 클래스 이름입니다.
-
-static POINT sqa = { 100, 100 };
-static POINT m_start;
-static POINT m_end;
-
-// 이 코드 모듈에 포함된 함수의 선언을 전달합니다:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
-// 1. 프로그램 시작 지점
-int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
-                     _In_opt_ HINSTANCE hPrevInstance,
-                     _In_ LPWSTR    lpCmdLine,
-                     _In_ int       nCmdShow)
+int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR    lpCmdLine, _In_ int       nCmdShow)
 {
-    //1-1. 실행된 프로그램의 시작주소
+    // hInstance : 실행된 프로그램의 시작 주소
+    // hPrevInstance : 의미 없음
+    // lpCmdLine : 게임 프로그래밍에선 의미가 없음
+
+    // 의미 없음
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
@@ -38,173 +31,186 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     // 전역 문자열을 초기화합니다.
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
     LoadStringW(hInstance, IDC_SUMMER24, szWindowClass, MAX_LOADSTRING);
+
+    // 윈도우 정보 등록
     MyRegisterClass(hInstance);
 
-    // 애플리케이션 초기화를 수행합니다:
-    if (!InitInstance (hInstance, nCmdShow))
+    // 창을 만드는 작업을 수행 (창 생성)
+    if (!InitInstance(hInstance, nCmdShow))
     {
         return FALSE;
     }
 
+    if (FAILED(CCore::Instance()->Init(hWnd, Vec2{ 1200, 768 }))) {
+        MessageBox(nullptr, L"Core 객체 초기화 실패", L"error", MB_OK);
+        return FALSE;
+    }
+
+    // 단축키 - 단축키가 눌렸는가 안눌렸는가를 검사하는 부분
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_SUMMER24));
 
     MSG msg;
-
-    // 기본 메시지 루프입니다:
     while (true) {
-        if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
-        {
+        if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
+            // 큐를 계속 보고 있어 -> true, false 
             if (WM_QUIT == msg.message)
                 break;
-            if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
-            {
+            if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg)) {
                 TranslateMessage(&msg);
                 DispatchMessage(&msg);
             }
         }
         else {
-            
+            CCore::Instance()->Progress();
         }
     }
-
-    return (int) msg.wParam;
+    return (int)msg.wParam;
 }
 
-
-
-//
-//  함수: MyRegisterClass()
-//
-//  용도: 창 클래스를 등록합니다.
-//
 ATOM MyRegisterClass(HINSTANCE hInstance)
 {
     WNDCLASSEXW wcex;
 
     wcex.cbSize = sizeof(WNDCLASSEX);
 
-    wcex.style          = CS_HREDRAW | CS_VREDRAW;
-    wcex.lpfnWndProc    = WndProc;
-    wcex.cbClsExtra     = 0;
-    wcex.cbWndExtra     = 0;
-    wcex.hInstance      = hInstance;
-    wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_SUMMER24));
-    wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW);
-    wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);
-    wcex.lpszMenuName   = MAKEINTRESOURCEW(IDC_SUMMER24);
-    wcex.lpszClassName  = szWindowClass;
-    wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
+    wcex.style = CS_HREDRAW | CS_VREDRAW;
+    wcex.lpfnWndProc = WndProc;
+    wcex.cbClsExtra = 0;
+    wcex.cbWndExtra = 0;
+    wcex.hInstance = hInstance;
+    wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDC_SUMMER24));
+    wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
+    wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+    wcex.lpszMenuName = MAKEINTRESOURCEW(IDC_SUMMER24);
+    wcex.lpszClassName = szWindowClass;
+    wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
     return RegisterClassExW(&wcex);
 }
 
-//
-//   함수: InitInstance(HINSTANCE, int)
-//
-//   용도: 인스턴스 핸들을 저장하고 주 창을 만듭니다.
-//
-//   주석:
-//
-//        이 함수를 통해 인스턴스 핸들을 전역 변수에 저장하고
-//        주 프로그램 창을 만든 다음 표시합니다.
-//
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
-   hInst = hInstance; // 인스턴스 핸들을 전역 변수에 저장합니다.
+    hInst = hInstance; // 인스턴스 핸들을 전역 변수에 저장합니다.
 
-   HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-      CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
+    hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
+        CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
 
-   if (!hWnd)
-   {
-      return FALSE;
-   }
+    if (!hWnd)
+    {
+        return FALSE;
+    }
 
-   ShowWindow(hWnd, nCmdShow);
-   UpdateWindow(hWnd);
+    ShowWindow(hWnd, nCmdShow);
+    UpdateWindow(hWnd);
 
-   return TRUE;
+    return TRUE;
 }
 
-//
-//  함수: WndProc(HWND, UINT, WPARAM, LPARAM)
-//
-//  용도: 주 창의 메시지를 처리합니다.
-//
-//  WM_COMMAND  - 애플리케이션 메뉴를 처리합니다.
-//  WM_PAINT    - 주 창을 그립니다.
-//  WM_DESTROY  - 종료 메시지를 게시하고 반환합니다.
-//
-//
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
     {
-            static RECT rt;
     case WM_COMMAND:
+    {
+        int wmId = LOWORD(wParam);
+        // 메뉴 선택을 구문 분석합니다:
+        switch (wmId)
         {
-            int wmId = LOWORD(wParam);
-            // 메뉴 선택을 구문 분석합니다:
-            switch (wmId)
-            {
-            case IDM_ABOUT:
-                DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
-                break;
-            case IDM_EXIT:
-                DestroyWindow(hWnd);
-                break;
-            default:
-                return DefWindowProc(hWnd, message, wParam, lParam);
-            }
-        }
-        break;
-    case WM_PAINT:
-        {
-            GetClientRect(hWnd, &rt);
-            PAINTSTRUCT ps;
-            HDC hdc = BeginPaint(hWnd, &ps);
-            SelectObject(hdc, (HBRUSH)GetStockObject(BLACK_BRUSH));
-            SelectObject(hdc, (HPEN)GetStockObject(LTGRAY_BRUSH));
-            
-            Rectangle(hdc, m_start.x, m_start.y, m_end.x, m_end.y);
-
-            EndPaint(hWnd, &ps);
-        }
-        break;
-
-    case WM_LBUTTONDOWN: {
-        m_start.y = HIWORD(lParam);
-        m_start.x = LOWORD(lParam);
-    }
-    break;
-    case WM_LBUTTONUP:{
-        m_end.y = HIWORD(lParam);
-        m_end.x = LOWORD(lParam);
-        InvalidateRect(hWnd, NULL, FALSE);
-
-    }
-    break;
-    case WM_KEYDOWN: {
-        switch (wParam)
-        {
-        case VK_UP:
-            sqa.y -= 10;
+        case IDM_ABOUT:
+            DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
             break;
-        case VK_LEFT:
-            sqa.x -= 10;
-            break;
-        case VK_DOWN:
-            sqa.y += 10;
-            break;
-        case VK_RIGHT:
-            sqa.x += 10;
+        case IDM_EXIT:
+            DestroyWindow(hWnd);
             break;
         default:
-            break;
+            return DefWindowProc(hWnd, message, wParam, lParam);
         }
-        InvalidateRect(hWnd, NULL, FALSE);
     }
     break;
+    case WM_PAINT:  // 무효화 영역이 발생한 경우
+        //     // 무효화 : 화면을 갱시하거나 다시 그릴 때를 의미함
+        //     // 무효화 영역 : 다른 위도우 창에 가려졌거나 다시 누를 때 겹쳐던 부분
+    {
+        PAINTSTRUCT ps;
+        HDC hdc = BeginPaint(hWnd, &ps);
+        //        
+        //         HPEN redPen = CreatePen(BS_SOLID, 1, RGB(255, 0, 0));
+        //         HBRUSH blackBrush = (HBRUSH)GetStockObject(BLACK_BRUSH);
+
+        //         HPEN defaultPen = (HPEN)SelectObject(hdc, redPen);
+        //         HBRUSH defaultBrush = (HBRUSH)SelectObject(hdc, blackBrush);
+
+        //         if (act) {
+        //             Rectangle(hdc, ptLT.x, ptLT.y, ptRB.x, ptRB.y);
+        //         }
+
+        //         for (size_t i = 0; i < vecInfo.size(); ++i) {
+        //             Rectangle(hdc, vecInfo[i].objPos.x - vecInfo[i].objScale.x / 2
+        //                 , vecInfo[i].objPos.y - vecInfo[i].objScale.y / 2
+        //                 , vecInfo[i].objPos.x + vecInfo[i].objScale.x / 2
+        //                 , vecInfo[i].objPos.y + vecInfo[i].objScale.y / 2);
+        //         }
+
+        //         SelectObject(hdc, defaultPen);
+        //         SelectObject(hdc, defaultBrush);
+        //         DeleteObject(redPen);
+        //         DeleteObject(defaultBrush);
+
+        EndPaint(hWnd, &ps);
+    }
+    break;
+
+    ///* case WM_KEYDOWN:
+    // {
+    //     switch (wParam) {
+    //     case VK_UP:
+    //         objPos.y -= 10;
+    //         InvalidateRect(hWnd, nullptr, true);
+    //         break;
+    //     case VK_DOWN:
+    //         objPos.y += 10;
+    //         InvalidateRect(hWnd, nullptr, true);
+    //         break;
+    //     case VK_LEFT:
+    //         objPos.x -= 10;
+    //         InvalidateRect(hWnd, nullptr, true);
+    //         break;
+    //     case VK_RIGHT:
+    //         objPos.x += 10;
+    //         InvalidateRect(hWnd, nullptr, true);
+    //         break;
+    //     }
+    // }
+    // break;*/
+
+    // case WM_LBUTTONDOWN: 
+    // {
+    //     ptLT.x = LOWORD(lParam);
+    //     ptLT.y = HIWORD(lParam);
+    //     act = true;
+    // }
+    // break;
+    // case WM_MOUSEMOVE:
+    // {
+    //     ptRB.x = LOWORD(lParam);
+    //     ptRB.y = HIWORD(lParam);
+    //     InvalidateRect(hWnd, nullptr, true);
+    // }
+    //     break;
+    // case WM_LBUTTONUP:
+    // {
+    //     objInfo info = {};
+    //     info.objPos.x = (ptLT.x + ptRB.x) / 2;
+    //     info.objPos.y = (ptLT.y + ptRB.y) / 2;
+
+    //     info.objScale.x = abs(ptLT.x - ptRB.x);
+    //     info.objScale.y = abs(ptLT.y - ptRB.y);
+
+    //     vecInfo.push_back(info);
+    //     act = false;
+    //     InvalidateRect(hWnd, nullptr, true);
+    // }
+    //     break;
 
     case WM_DESTROY:
         PostQuitMessage(0);
@@ -215,7 +221,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     return 0;
 }
 
-// 정보 대화 상자의 메시지 처리기입니다.
 INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
     UNREFERENCED_PARAMETER(lParam);
