@@ -18,6 +18,15 @@ enum class GROUP_TYPE {
 	PLAYER,
 	MISSILE,
 	MONSTER,
-	END = 32,
 
+	END = 32,
+};
+
+enum class SCENE_TYPE {
+	TOOL,
+	START,
+	STAGE_1,
+	STAGE_2,
+
+	END
 };

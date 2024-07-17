@@ -137,6 +137,8 @@
     <ClInclude Include="framework.h" />
     <ClInclude Include="KeyMgr.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="SceneMgr.h" />
+    <ClInclude Include="Start_Scene.h" />
     <ClInclude Include="struct.h" />
     <ClInclude Include="Summer24.h" />
     <ClInclude Include="targetver.h" />
@@ -149,6 +151,8 @@
     <ClCompile Include="CScene.cpp" />
     <ClCompile Include="KeyMgr.cpp" />
     <ClCompile Include="pch.cpp" />
+    <ClCompile Include="SceneMgr.cpp" />
+    <ClCompile Include="Start_Scene.cpp" />
     <ClCompile Include="Summer24.cpp" />
     <ClCompile Include="TimeMgr.cpp" />
   </ItemGroup>
