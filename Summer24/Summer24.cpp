@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "framework.h"
 #include "Summer24.h"
+#include "CCore.h"
 
 #include "CCore.h"
 
@@ -39,6 +40,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
     if (!InitInstance(hInstance, nCmdShow))
     {
         return FALSE;
+    }
+    if (FAILED(CCore::Instance()->Init(hWnd, Vec2{ 1200,768 }))) {
+        MessageBox(nullptr, L"CCore 객체 초기화 실패", L"err", MB_OK);
+        return false;
     }
 
     if (FAILED(CCore::Instance()->Init(hWnd, Vec2{ 1200, 768 }))) {

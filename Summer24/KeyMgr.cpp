@@ -64,16 +64,37 @@ void KeyMgr::Update()
 {
 	HWND hwnd = GetFocus();
 
-	if (nullptr == hwnd) {
+	if (nullptr != hwnd) {
 		for (int i = 0; i < (int)KEY::LAST; ++i) {
-			if (GetAsyncKeyState(arrVK[i]) & 0x8000) {
-				if (vecKey[i].prev) {
+			if (GetAsyncKeyState(arrVK[i]) & 0x8000) { // 현재 눌림
+				if (vecKey[i].prev) { // 이전에 눌림
 					vecKey[i].state = KEY_TYPE::HOLD;
 				}
-				else {
+				else { // 이전에 안눌림
 					vecKey[i].state = KEY_TYPE::TAP;
 				}
+				vecKey[i].prev = true;
 			}
+			else { // 현재 안눌림
+				if (vecKey[i].prev) { // 이전에 눌림
+					vecKey[i].state = KEY_TYPE::AWAY;
+				}
+				else { // 이전에 안눌림
+					vecKey[i].state = KEY_TYPE::NONE;
+				}
+				vecKey[i].prev = false;
+			}
+		}
+	}
+	else {
+		for (int i = 0; i < (int)KEY::LAST; ++i) {
+			vecKey[i].prev = false;
+			if (KEY_TYPE::TAP == vecKey[i].state ||
+				KEY_TYPE::HOLD == vecKey[i].state)
+				vecKey[i].state = KEY_TYPE::NONE;
+			else if (KEY_TYPE::AWAY == vecKey[i].state)
+				vecKey[i].state = KEY_TYPE::NONE;
+
 		}
 	}
 }

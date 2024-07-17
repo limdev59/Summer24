@@ -2,6 +2,7 @@
 #include "CCore.h"
 
 #include "TimeMgr.h"
+#include "KeyMgr.h"
 
 #include "CObject.h"
 
@@ -27,12 +28,14 @@ CCore::~CCore()
 
 void CCore::Update()
 {
+	TimeMgr::Instance()->Update();
+	KeyMgr::Instance()->Update();
 	Vec2 vPos = obj.GetPos();
 
-	if (GetAsyncKeyState(VK_LEFT) & 0x8000) {
+	if (KeyMgr::Instance()->GetKeyState(KEY::LEFT)==KEY_TYPE::HOLD) {
 		vPos.x -= 200.f * fDT;
 	}
-	if (GetAsyncKeyState(VK_RIGHT) & 0x8000) {
+	if (KeyMgr::Instance()->GetKeyState(KEY::RIGHT) == KEY_TYPE::HOLD) {
 		vPos.x += 200.f * fDT;
 	}
 
@@ -41,6 +44,8 @@ void CCore::Update()
 
 void CCore::Render()
 {
+	TimeMgr::Instance()->Render();
+
 	Rectangle(mdc, -1, -1, ptResolution.x + 1, ptResolution.y + 1);
 
 	Vec2 vPos = obj.GetPos();
@@ -78,14 +83,13 @@ int CCore::Init(HWND _handle, Vec2 _pt)
 
 	// Manager Init
 	TimeMgr::Instance()->Init();
+	KeyMgr::Instance()->Init();
 
 	return S_OK;
 }
 
 void CCore::Progress()
 {
-	TimeMgr::Instance()->Update();
-	TimeMgr::Instance()->Render();
 	Update();
 	Render();
 }

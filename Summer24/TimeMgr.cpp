@@ -3,7 +3,7 @@
 
 #include "CCore.h"
 
-TimeMgr::TimeMgr()
+TimeMgr::TimeMgr() 
 	: curCount{}
 	, prevCount{}
 	, preQuency{}
@@ -42,6 +42,7 @@ void TimeMgr::Render()
 {
 
 	++iCallCount;
+
 	dAcc += dDT;
 
 	if (dAcc >= 1.) {

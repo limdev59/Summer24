@@ -132,6 +132,7 @@
   <ItemGroup>
     <ClInclude Include="CCore.h" />
     <ClInclude Include="CObject.h" />
+    <ClInclude Include="CScene.h" />
     <ClInclude Include="define.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="KeyMgr.h" />
@@ -145,6 +146,7 @@
   <ItemGroup>
     <ClCompile Include="CCore.cpp" />
     <ClCompile Include="CObject.cpp" />
+    <ClCompile Include="CScene.cpp" />
     <ClCompile Include="KeyMgr.cpp" />
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="Summer24.cpp" />
