@@ -12,3 +12,12 @@
 
 #define fDT TimeMgr::Instance()->GetfDT()
 #define DT TimeMgr::Instance()->GetDT()
+
+enum class GROUP_TYPE {
+	DEFAULT,
+	PLAYER,
+	MISSILE,
+	MONSTER,
+	END = 32,
+
+};
