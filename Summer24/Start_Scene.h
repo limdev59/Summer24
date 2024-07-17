@@ -7,5 +7,7 @@ public:
 	Start_Scene();
 	~Start_Scene();
 	
+	virtual void Enter();
+	virtual void Exit();
 };
 

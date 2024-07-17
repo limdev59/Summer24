@@ -25,6 +25,24 @@
     <Filter Include="Game\02. Manager">
       <UniqueIdentifier>{1e2f2e5a-8e70-4a90-8727-c9db111efd1f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\03. Scene">
+      <UniqueIdentifier>{c8407084-c088-4590-bab7-b32f241b761e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\03. Scene\Start_Scene">
+      <UniqueIdentifier>{7f22ed9f-d40e-4408-9494-ad69257c9136}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\02. Manager\Key">
+      <UniqueIdentifier>{46da3be2-0870-4d11-b8f5-319f75e38eb7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\02. Manager\Time">
+      <UniqueIdentifier>{f3eae932-18d8-4a11-8b0f-a2892e59ae05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\02. Manager\Scene">
+      <UniqueIdentifier>{0473e36d-c6cb-41e5-b79b-745de37fd648}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\01. Object\Player">
+      <UniqueIdentifier>{ec9f2490-9f11-4cfd-bfc3-4397560d4043}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -54,11 +72,23 @@
     <ClInclude Include="struct.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="TimeMgr.h">
-      <Filter>Game\02. Manager</Filter>
+    <ClInclude Include="CScene.h">
+      <Filter>Game\03. Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Start_Scene.h">
+      <Filter>Game\03. Scene\Start_Scene</Filter>
     </ClInclude>
     <ClInclude Include="KeyMgr.h">
-      <Filter>Game\02. Manager</Filter>
+      <Filter>Game\02. Manager\Key</Filter>
+    </ClInclude>
+    <ClInclude Include="TimeMgr.h">
+      <Filter>Game\02. Manager\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneMgr.h">
+      <Filter>Game\02. Manager\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Game\01. Object\Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -74,11 +104,23 @@
     <ClCompile Include="CObject.cpp">
       <Filter>Game\01. Object</Filter>
     </ClCompile>
-    <ClCompile Include="TimeMgr.cpp">
-      <Filter>Game\02. Manager</Filter>
+    <ClCompile Include="CScene.cpp">
+      <Filter>Game\03. Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Start_Scene.cpp">
+      <Filter>Game\03. Scene\Start_Scene</Filter>
     </ClCompile>
     <ClCompile Include="KeyMgr.cpp">
-      <Filter>Game\02. Manager</Filter>
+      <Filter>Game\02. Manager\Key</Filter>
+    </ClCompile>
+    <ClCompile Include="TimeMgr.cpp">
+      <Filter>Game\02. Manager\Time</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneMgr.cpp">
+      <Filter>Game\02. Manager\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Game\01. Object\Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

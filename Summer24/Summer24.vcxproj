@@ -136,6 +136,7 @@
     <ClInclude Include="define.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="KeyMgr.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="SceneMgr.h" />
     <ClInclude Include="Start_Scene.h" />
@@ -151,6 +152,7 @@
     <ClCompile Include="CScene.cpp" />
     <ClCompile Include="KeyMgr.cpp" />
     <ClCompile Include="pch.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="SceneMgr.cpp" />
     <ClCompile Include="Start_Scene.cpp" />
     <ClCompile Include="Summer24.cpp" />

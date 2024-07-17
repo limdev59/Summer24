@@ -3,10 +3,11 @@
 
 #include "TimeMgr.h"
 #include "KeyMgr.h"
+#include "SceneMgr.h"
 
 #include "CObject.h"
 
-CObject obj;
+
 
 CCore::CCore()
 	: handle(0)
@@ -30,34 +31,19 @@ void CCore::Update()
 {
 	TimeMgr::Instance()->Update();
 	KeyMgr::Instance()->Update();
-	Vec2 vPos = obj.GetPos();
-
-	if (KeyMgr::Instance()->GetKeyState(KEY::LEFT)==KEY_TYPE::HOLD) {
-		vPos.x -= 200.f * fDT;
-	}
-	if (KeyMgr::Instance()->GetKeyState(KEY::RIGHT) == KEY_TYPE::HOLD) {
-		vPos.x += 200.f * fDT;
-	}
-
-	obj.SetPos(vPos);
+	SceneMgr::Instance()->Update();
 }
 
 void CCore::Render()
 {
-	TimeMgr::Instance()->Render();
-
 	Rectangle(mdc, -1, -1, ptResolution.x + 1, ptResolution.y + 1);
 
-	Vec2 vPos = obj.GetPos();
-	Vec2 vScale = obj.GetScale();
-
-	Rectangle(mdc, (int)(vPos.x - vScale.x / 2)
-		, (int)(vPos.y - vScale.y / 2)
-		, (int)(vPos.x + vScale.x / 2)
-		, (int)(vPos.y + vScale.y / 2));
-
+	SceneMgr::Instance()->Render(mdc);
+	
 	BitBlt(hdc, 0, 0, ptResolution.x, ptResolution.y,
 		mdc, 0, 0, SRCCOPY);
+
+	TimeMgr::Instance()->Render();
 }
 
 int CCore::Init(HWND _handle, Vec2 _pt)
@@ -78,12 +64,10 @@ int CCore::Init(HWND _handle, Vec2 _pt)
 	HBITMAP oldBit = (HBITMAP)SelectObject(mdc, hBit);
 	DeleteObject(oldBit);
 
-	obj.SetPos(Vec2((float)(ptResolution.x / 2), (float)(ptResolution.y / 2)));
-	obj.SetScale(Vec2(100, 100));
-
 	// Manager Init
 	TimeMgr::Instance()->Init();
 	KeyMgr::Instance()->Init();
+	SceneMgr::Instance()->Init();
 
 	return S_OK;
 }
